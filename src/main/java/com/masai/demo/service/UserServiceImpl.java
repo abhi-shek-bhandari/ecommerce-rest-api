@@ -79,6 +79,7 @@ public class UserServiceImpl implements UserService{
         return userList;
     }
 
+<<<<<<< HEAD
     @Override
     public User deleteUser(Integer userId) {
         User deletedUser = this.userDao.findById(userId)
@@ -86,6 +87,8 @@ public class UserServiceImpl implements UserService{
         return deletedUser;
     }
 
+=======
+>>>>>>> 86f3e830b822613583154b7a4fb6995679c28ee9
     private User dtoToUser(UserDto userDto){
 
         User user = new User();

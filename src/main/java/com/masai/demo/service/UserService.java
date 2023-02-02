@@ -12,5 +12,8 @@ public interface UserService {
     UserDto updateUserPassword(String Password, Integer userId);
     UserDto findUser(Integer userId);
     List<User> getListOfAllUsers();
+<<<<<<< HEAD
     User deleteUser(Integer userId);
+=======
+>>>>>>> 86f3e830b822613583154b7a4fb6995679c28ee9
 }
