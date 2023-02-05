@@ -38,6 +38,17 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorDetails,HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(AddressException.class)
+    public ResponseEntity<MyErrorDetails> addressExceptionHandler(AddressException addressException, WebRequest request){
+
+        MyErrorDetails errorDetails = new MyErrorDetails();
+        errorDetails.setMessage(addressException.getMessage());
+        errorDetails.setDetails(request.getDescription(false));
+        errorDetails.setTimestamp(LocalDateTime.now());
+
+        return new ResponseEntity<>(errorDetails,HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<MyErrorDetails> mynotFoundHandler(NoHandlerFoundException nfe,WebRequest req)  {
 
