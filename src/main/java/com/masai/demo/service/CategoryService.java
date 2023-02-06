@@ -9,7 +9,7 @@ import java.util.List;
 public interface CategoryService {
 
     Category addCategory(CategoryDto categoryDto)throws CategoryException;
-    List<Category> viewAllCategory()throws CategoryException;
+    List<CategoryDto> viewAllCategory()throws CategoryException;
     Category deleteCategory(Integer catId)throws CategoryException;
 
 }
