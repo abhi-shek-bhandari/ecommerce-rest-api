@@ -2,13 +2,12 @@ package com.masai.demo.service;
 
 import com.masai.demo.dto.CategoryDto;
 import com.masai.demo.exception.CategoryException;
-import com.masai.demo.exception.UserException;
 import com.masai.demo.model.Category;
 import com.masai.demo.repository.CategoryDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.ls.LSException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -28,13 +27,19 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
-    public List<Category> viewAllCategory() throws CategoryException {
+    public List<CategoryDto> viewAllCategory() throws CategoryException {
 
         List<Category> list = this.categoryDao.findAll();
 
         if (list.size() == 0) throw new CategoryException("No Category Founded");
 
-        return list;
+        List<CategoryDto> categoryDtos = new ArrayList<>();
+
+        for (Category category: list) {
+            categoryDtos.add(this.categoryToDto(category));
+        }
+
+        return categoryDtos;
     }
 
     @Override
