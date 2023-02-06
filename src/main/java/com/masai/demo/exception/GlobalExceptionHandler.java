@@ -27,6 +27,17 @@ public class GlobalExceptionHandler {
 
     }
 
+    @ExceptionHandler(CategoryException.class)
+    public ResponseEntity<MyErrorDetails> categoryExceptionHandler(CategoryException categoryException, WebRequest request){
+
+        MyErrorDetails errorDetails = new MyErrorDetails();
+        errorDetails.setDetails(request.getDescription(false));
+        errorDetails.setMessage(categoryException.getMessage());
+        errorDetails.setTimestamp(LocalDateTime.now());
+
+        return new ResponseEntity<>(errorDetails,HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(UserException.class)
     public ResponseEntity<MyErrorDetails> userExceptionHandler(UserException userException, WebRequest request){
 
