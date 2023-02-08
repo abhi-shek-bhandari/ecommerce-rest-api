@@ -30,7 +30,6 @@ public class CartServiceImpl implements CartService{
     @Autowired
     private CartDao cartDao;
 
-
     @Override
     public List<Product> addProductInCart(Integer cartId, Integer productId) throws ProductException, CartException {
 
@@ -70,6 +69,5 @@ public class CartServiceImpl implements CartService{
 
         return cart;
     }
-
 
 }
