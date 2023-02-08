@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -52,4 +53,20 @@ public class User {
     @OneToMany
     @JoinColumn(name = "user_id")
     private Set<Address> addresses;
+
+    @OneToOne(mappedBy = "user")
+    private Cart cart;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return Objects.equals(getUser_id(), user.getUser_id()) && Objects.equals(getUserFirstName(), user.getUserFirstName()) && Objects.equals(getUserLastName(), user.getUserLastName()) && Objects.equals(getEmail(), user.getEmail()) && Objects.equals(getPassword(), user.getPassword()) && Objects.equals(getPhone(), user.getPhone());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUser_id(), getUserFirstName(), getUserLastName(), getEmail(), getPassword(), getPhone());
+    }
 }

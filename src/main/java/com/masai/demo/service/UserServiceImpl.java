@@ -5,6 +5,7 @@ import com.masai.demo.dto.UserDto;
 import com.masai.demo.exception.AddressException;
 import com.masai.demo.exception.UserException;
 import com.masai.demo.model.Address;
+import com.masai.demo.model.Cart;
 import com.masai.demo.model.User;
 import com.masai.demo.repository.AddressDao;
 import com.masai.demo.repository.UserDao;
@@ -27,7 +28,15 @@ public class UserServiceImpl implements UserService{
     @Override
     public User createUser(UserDto userDto) {
 
-        return this.userDao.save(this.dtoToUser(userDto));
+        User user = this.dtoToUser(userDto);
+
+        Cart cart = new Cart();
+
+        cart.setUser(user);
+
+        user.setCart(cart);
+
+        return this.userDao.save(user);
 
     }
 

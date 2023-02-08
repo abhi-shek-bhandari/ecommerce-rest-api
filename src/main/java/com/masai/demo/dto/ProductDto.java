@@ -23,5 +23,7 @@ public class ProductDto {
 
     private double sellingPrice;
 
+    private String imageurl;
+
     private Set<Category> category = new HashSet<>();
 }
