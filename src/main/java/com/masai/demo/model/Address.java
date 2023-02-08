@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.*;
+import java.util.Objects;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -46,4 +47,17 @@ public class Address {
     @NotEmpty(message = "landmark status cannot be empty.")
     @Size(min=3,max=24, message="landmark can be 3 to 24 characters.")
     private String landmark;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Address)) return false;
+        Address address = (Address) o;
+        return getAddress_id().equals(address.getAddress_id()) && getCity().equals(address.getCity()) && getState().equals(address.getState()) && getPhone().equals(address.getPhone()) && getPincode().equals(address.getPincode()) && getLandmark().equals(address.getLandmark());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getAddress_id(), getCity(), getState(), getPhone(), getPincode(), getLandmark());
+    }
 }

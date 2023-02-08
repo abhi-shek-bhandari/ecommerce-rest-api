@@ -38,6 +38,17 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorDetails,HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(CartException.class)
+    public ResponseEntity<MyErrorDetails> cartExceptionHandler(CartException cartException, WebRequest request){
+
+        MyErrorDetails errorDetails = new MyErrorDetails();
+        errorDetails.setDetails(request.getDescription(false));
+        errorDetails.setMessage(cartException.getMessage());
+        errorDetails.setTimestamp(LocalDateTime.now());
+
+        return new ResponseEntity<>(errorDetails,HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(ProductException.class)
     public ResponseEntity<MyErrorDetails> productExceptionHandler(ProductException productException, WebRequest request){
 
