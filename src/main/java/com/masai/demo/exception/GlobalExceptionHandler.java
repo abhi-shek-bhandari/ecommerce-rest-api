@@ -60,6 +60,17 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorDetails,HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(PromocodeException.class)
+    public ResponseEntity<MyErrorDetails> promocodeExceptionHandler(PromocodeException promocodeException, WebRequest webRequest){
+
+        MyErrorDetails errorDetails = new MyErrorDetails();
+        errorDetails.setDetails(webRequest.getDescription(false));
+        errorDetails.setTimestamp(LocalDateTime.now());
+        errorDetails.setMessage(promocodeException.getMessage());
+
+        return new ResponseEntity<>(errorDetails,HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(UserException.class)
     public ResponseEntity<MyErrorDetails> userExceptionHandler(UserException userException, WebRequest request){
 
