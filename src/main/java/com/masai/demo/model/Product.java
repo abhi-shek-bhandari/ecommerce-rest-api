@@ -1,10 +1,7 @@
 package com.masai.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -18,6 +15,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,8 +26,8 @@ public class Product {
     @NotEmpty(message = "Brand name cannot be empty")
     private String brand;
 
-    @Pattern(regexp = "[\\s]*[0-9]*[1-9]+",message="Only Numbers accepted")
-    @Min(value = 0L, message = "The value must be positive")
+    @Min(value = 0, message = "The value must be positive")
+//    @Pattern(regexp = "^[6-9][0-9]{9}",message="Only Numbers accepted")
     private double markedPrice;
 
     @NotNull(message = "Product name cannot be null")
@@ -37,8 +35,8 @@ public class Product {
     @NotEmpty(message = "Product name cannot be empty")
     private String productName;
 
-    @Pattern(regexp = "[\\s]*[0-9]*[1-9]+",message="Only Numbers accepted")
-    @Min(value = 0L, message = "The value must be positive")
+    @Min(value = 0, message = "The value must be positive")
+//    @Pattern(regexp = "^[6-9][0-9]{9}",message="Only Numbers accepted")
     private double sellingPrice;
 
     @NotNull(message = "Image url cannot be null")
@@ -46,19 +44,8 @@ public class Product {
     @NotEmpty(message = "Image url cannot be empty")
     private String imageurl;
 
+    @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL)
     private Set<Category> category = new HashSet<>();
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Product)) return false;
-        Product product = (Product) o;
-        return Double.compare(product.getMarkedPrice(), getMarkedPrice()) == 0 && Double.compare(product.getSellingPrice(), getSellingPrice()) == 0 && Objects.equals(getProductId(), product.getProductId()) && Objects.equals(getBrand(), product.getBrand()) && Objects.equals(getProductName(), product.getProductName()) && Objects.equals(getImageurl(), product.getImageurl());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getProductId(), getBrand(), getMarkedPrice(), getProductName(), getSellingPrice(), getImageurl());
-    }
 }

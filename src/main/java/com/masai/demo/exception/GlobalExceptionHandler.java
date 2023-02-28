@@ -1,7 +1,10 @@
 package com.masai.demo.exception;
 
+
+import com.masai.demo.dto.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -19,6 +22,17 @@ public class GlobalExceptionHandler {
 
     }
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    ResponseEntity<MyErrorDetails> methodArgumentNotValidHandler(MethodArgumentNotValidException manve, WebRequest request) {
+
+        MyErrorDetails errorDetails = new MyErrorDetails();
+        errorDetails.setDetails(request.getDescription(false));
+        errorDetails.setMessage(manve.getMessage());
+        errorDetails.setTimestamp(LocalDateTime.now());
+
+        return new ResponseEntity<>(errorDetails,HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<MyErrorDetails> myExceptionHandler(Exception e, WebRequest req){
 
@@ -33,6 +47,24 @@ public class GlobalExceptionHandler {
         MyErrorDetails errorDetails = new MyErrorDetails();
         errorDetails.setDetails(request.getDescription(false));
         errorDetails.setMessage(categoryException.getMessage());
+        errorDetails.setTimestamp(LocalDateTime.now());
+
+        return new ResponseEntity<>(errorDetails,HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ApiException.class)
+    public ResponseEntity<ApiResponse> handleApiException(ApiException ex) {
+        String message = ex.getMessage();
+        ApiResponse apiResponse = new ApiResponse(message, true);
+        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(OrdersException.class)
+    public ResponseEntity<MyErrorDetails> orderExceptionHandler(OrdersException ordersException, WebRequest request){
+
+        MyErrorDetails errorDetails = new MyErrorDetails();
+        errorDetails.setDetails(request.getDescription(false));
+        errorDetails.setMessage(ordersException.getMessage());
         errorDetails.setTimestamp(LocalDateTime.now());
 
         return new ResponseEntity<>(errorDetails,HttpStatus.BAD_REQUEST);
@@ -87,6 +119,17 @@ public class GlobalExceptionHandler {
 
         MyErrorDetails errorDetails = new MyErrorDetails();
         errorDetails.setMessage(addressException.getMessage());
+        errorDetails.setDetails(request.getDescription(false));
+        errorDetails.setTimestamp(LocalDateTime.now());
+
+        return new ResponseEntity<>(errorDetails,HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(RoleException.class)
+    public ResponseEntity<MyErrorDetails> roleExceptionHandler(RoleException roleException, WebRequest request){
+
+        MyErrorDetails errorDetails = new MyErrorDetails();
+        errorDetails.setMessage(roleException.getMessage());
         errorDetails.setDetails(request.getDescription(false));
         errorDetails.setTimestamp(LocalDateTime.now());
 

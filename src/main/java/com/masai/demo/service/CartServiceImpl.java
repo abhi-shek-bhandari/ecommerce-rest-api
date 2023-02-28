@@ -67,6 +67,10 @@ public class CartServiceImpl implements CartService{
 
         cart.getProducts().clear();
 
+        cart.setTotalAmount(0);
+
+        this.cartDao.save(cart);
+
         return cart;
     }
 

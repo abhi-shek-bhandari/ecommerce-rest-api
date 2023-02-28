@@ -23,7 +23,7 @@ public class Promocode {
 
     private String promocode;
 
-    @Pattern(regexp = "[\\s]*[0-9]*[1-9]+",message="Only Numbers accepted")
+//    @Pattern(regexp = "^[6-9][0-9]{9}",message="Only Numbers accepted")
     @Min(value = 0L, message = "The value must be positive")
     private Integer discountPercentage;
 }

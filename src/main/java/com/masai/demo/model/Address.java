@@ -34,7 +34,7 @@ public class Address {
     @NotBlank(message = "Phone cannot be blank")
     @NotEmpty(message = "Phone cannot be empty")
     @Size(min=10,max=10,message="Mobile should be 10 characters.")
-    @Pattern(regexp="(^$|[0-9]{10})",message="Mobile should contains only numbers")
+    @Pattern(regexp = "^[6-9][0-9]{9}",message="Mobile should contains only numbers")
     private String phone;
 
     @NotNull(message = "Pincode cannot be null")

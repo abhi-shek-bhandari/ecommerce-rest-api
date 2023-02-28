@@ -1,5 +1,6 @@
 package com.masai.demo.service;
 
+import com.masai.demo.dto.PostResponse;
 import com.masai.demo.dto.ProductDto;
 import com.masai.demo.exception.CategoryException;
 import com.masai.demo.exception.ProductException;
@@ -8,6 +9,10 @@ import com.masai.demo.model.Product;
 import com.masai.demo.repository.CategoryDao;
 import com.masai.demo.repository.ProductDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -34,7 +39,9 @@ public class ProductServiceImpl implements ProductService{
 
         product.getCategory().add(category);
 
-        if (this.productDao.save(product) == null) {
+        product = this.productDao.save(product);
+
+        if (product == null) {
             throw new ProductException("Product was not save");
         }
 
@@ -42,35 +49,40 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public List<ProductDto> viewAllProducts() throws ProductException {
+    public PostResponse viewAllProducts(Integer pageNumber, Integer pageSize, String sortBy, String sortDir) throws ProductException {
 
-        List<Product> products = this.productDao.findAll();
+        Sort sort = (sortDir.equalsIgnoreCase("desc"))?Sort.by(sortBy).descending():Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+
+        Page<Product> productPage = this.productDao.findAll(pageable);
+
+        List<Product> products = productPage.getContent();
 
         if (products.isEmpty()) throw new ProductException("No Product Found");
 
-        List<ProductDto> dtoList = new ArrayList<>();
+        PostResponse postResponse = new PostResponse();
 
-        for (Product product : products){
-            dtoList.add(this.productToDto(product));
-        }
+        postResponse.setContent(products);
+        postResponse.setPageNumber(productPage.getNumber());
+        postResponse.setPageSize(productPage.getSize());
+        postResponse.setTotalElements(productPage.getTotalElements());
+        postResponse.setTotalPages(productPage.getTotalPages());
+        postResponse.setLastPage(productPage.isLast());
 
-        return dtoList;
+        return postResponse;
     }
 
     @Override
-    public List<ProductDto> searchProductsByName(String name) throws ProductException {
+    public List<Product> searchProductsByName(String name) throws ProductException {
 
-        List<Product> productsByName = this.productDao.findProductName("%" + name + "%");
+//        List<Product> productsByName = this.productDao.findProductName("%" + name + "%");
+
+        List<Product> productsByName = this.productDao.findByProductNameContaining(name);
 
         if (productsByName.isEmpty()) throw new ProductException("No Product Found");
 
-        List<ProductDto> dtoList = new ArrayList<>();
-
-        for (Product product : productsByName){
-            dtoList.add(this.productToDto(product));
-        }
-
-        return dtoList;
+        return productsByName;
     }
 
     @Override
@@ -87,7 +99,9 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public List<Product> searchProductsByBrand(String brand) throws ProductException {
 
-        List<Product> productsByName = this.productDao.findProductsByName("%" + brand + "%");
+//        this.productDao.searchByBrandContaining("%"+brand+"%");
+
+        List<Product> productsByName = this.productDao.findByBrandContaining(brand);
 
         if (productsByName.isEmpty()) throw new ProductException("No Products Found");
 
@@ -112,7 +126,7 @@ public class ProductServiceImpl implements ProductService{
         product.setSellingPrice(productDto.getSellingPrice());
         product.setBrand(productDto.getBrand());
         product.setMarkedPrice(productDto.getMarkedPrice());
-        product.setCategory(productDto.getCategory());
+        product.setImageurl(productDto.getImageurl());
 
         return product;
     }
@@ -122,7 +136,6 @@ public class ProductServiceImpl implements ProductService{
         ProductDto productDto = new ProductDto();
         productDto.setProductName(product.getProductName());
         productDto.setBrand(product.getBrand());
-        productDto.setCategory(product.getCategory());
         productDto.setMarkedPrice(product.getMarkedPrice());
         productDto.setSellingPrice(product.getSellingPrice());
 
